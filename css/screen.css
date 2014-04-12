@@ -101,8 +101,9 @@ section.machine {
 
         section.editor #input-box {
             float: right;
-            margin-right: 20px;
+            margin-right: 220px;
             color: gray;
+            height: 20px;
             display: none;
         }
 
@@ -115,6 +116,20 @@ section.machine {
             font-size: 16px;
             text-align: center;
             outline:none;
+        }
+
+        section.editor #delay-box {
+            float: right;
+            margin-right: 25px;
+        }
+
+        section.editor #delay-box label {
+            display: block;
+            color: gray;
+        }
+
+        section.editor #delay-box input {
+
         }
 
         section.editor span.caret {

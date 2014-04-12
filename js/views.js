@@ -85,7 +85,7 @@ var InterpreterView = Backbone.View.extend({
         this.output.empty();
         this.input.val("");
         this.interpreter = new Interpreter(
-            this.editor.text(),
+            this.editor.val(),
             this.tape,
             this.pointer,
             this.out.bind(this),

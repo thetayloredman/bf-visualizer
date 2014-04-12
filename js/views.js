@@ -44,7 +44,7 @@ var TapeView = Backbone.View.extend({
 
 
 var InterpreterView = Backbone.View.extend({
-    delay: 100,
+    delay: 30,
     el: "#interpreter",
     initialize: function (options) {
         this.pointer = options.pointer;

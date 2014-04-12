@@ -56,12 +56,12 @@ var InterpreterView = Backbone.View.extend({
         "click #pause": "pause",
         "click #continue": "continue",
         "click #stop": "stop",
-        "keyup #source": "sourceChange",
         "change #input": "recieveInput"
     },
     render: function () {
-	this.input  = this.$el.find("#input");
+	    this.input  = this.$el.find("#input");
         this.output = this.$el.find("#output");
+        this.preview = this.$el.find("#preview")
         this.buttons = new ButtonSwitchView({
             el: this.el
         }).render();
@@ -69,6 +69,15 @@ var InterpreterView = Backbone.View.extend({
             model: this.tape,
             pointer: this.pointer
         }).render();
+        this.preview.hide();
+    },
+    showPreview: function () {
+        this.preview.show();
+        this.editor.hide();
+    },
+    showEditor: function () {
+        this.preview.hide();
+        this.editor.show();
     },
     run: function () {
         this.reset();
@@ -82,6 +91,7 @@ var InterpreterView = Backbone.View.extend({
             this.awaitInput.bind(this),
             this.instruction.bind(this));
         this.continue();
+        this.showPreview();
     },
     out: function (cell) {
         this.output.append(cell.char());
@@ -97,18 +107,21 @@ var InterpreterView = Backbone.View.extend({
         this.input.val("");
         this.continue();
     },
-    instruction: function(index) {
+    removeCaret: function () {
         this.editor
             .find("span.caret")
             .contents()
             .unwrap();
+    },
+    instruction: function(index) {
+        this.removeCaret();
 
-        var source = this.editor.text(),
+        var source = this.editor.val(),
             caret = $("<span>")
             .addClass("caret")
             .html(source.charAt(index));
 
-        this.editor
+        this.preview
             .empty()
             .append(source.substr(0, index))
             .append(caret)
@@ -136,10 +149,7 @@ var InterpreterView = Backbone.View.extend({
     stop: function () {
         this.pause();
         this.reset();
-    },
-    sourceChange: function() {
-        this.stop();
-        this.editor.html(this.editor.text());
+        this.showEditor();
     }
 });
 

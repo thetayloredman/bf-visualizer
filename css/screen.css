@@ -76,7 +76,8 @@ section.machine {
             height: 0;
         }
 
-        section.editor #source {
+        section.editor #source,
+        section.editor #preview {
             width: 815px;
             height: 400px;
             line-height: 1.3;
@@ -92,6 +93,10 @@ section.machine {
             display: block;
             overflow: scroll;
             word-wrap: normal;
+        }
+
+        section.editor #preview {
+            /*display: none;*/
         }
 
         section.editor #input-box {
@@ -112,7 +117,7 @@ section.machine {
             outline:none;
         }
 
-        section.editor #source span.caret {
+        section.editor span.caret {
             border-radius: 4px;
             background-color: #fff;
             color: #000;

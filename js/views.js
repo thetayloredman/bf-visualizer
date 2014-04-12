@@ -108,7 +108,8 @@ var InterpreterView = Backbone.View.extend({
             .addClass("caret")
             .html(source.charAt(index));
 
-        this.editor.empty()
+        this.editor
+            .empty()
             .append(source.substr(0, index))
             .append(caret)
             .append(source.substr(index + 1));

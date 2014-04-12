@@ -34,7 +34,6 @@ var TapeView = Backbone.View.extend({
             })).render().el);
         }, this);
 
-
         new PointerView({
             model: this.pointer
         }).render();
@@ -99,17 +98,20 @@ var InterpreterView = Backbone.View.extend({
         this.continue();
     },
     instruction: function(index) {
-        this.editor.find("span.caret").contents().unwrap();
-        var src = this.editor.text();
-        // XXX: There probably is a more elegant way to preserve the
-        //      encoded characters. (< as &lt; and so on)
-        var e = $('<div/>');
-        src = e.text(src.substr(0, index)).html()
-            + "<span class=\"caret\">"
-            + e.text(src.charAt(index)).html()
-            + "</span>"
-            + e.text(src.substr(index + 1)).html();
-        this.editor.html(src);
+        this.editor
+            .find("span.caret")
+            .contents()
+            .unwrap();
+
+        var source = this.editor.text(),
+            caret = $("<span>")
+            .addClass("caret")
+            .html(source.charAt(index));
+
+        this.editor.empty()
+            .append(source.substr(0, index))
+            .append(caret)
+            .append(source.substr(index + 1));
     },
     continue: function () {
         this.interval = setInterval(function () {

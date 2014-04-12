@@ -54,9 +54,9 @@ var InterpreterView = Backbone.View.extend({
     events: {
         "click #run": "run",
         "click #pause": "pause",
-        "click #continue": "continue",
+        "click #continue": "loop",
         "click #stop": "stop",
-        "change #input": "recieveInput"
+        "change #input": "receiveInput"
     },
     render: function () {
 	    this.input  = this.$el.find("#input");
@@ -81,6 +81,7 @@ var InterpreterView = Backbone.View.extend({
     },
     run: function () {
         this.reset();
+        this.preview.empty();
         this.output.empty();
         this.input.val("");
         this.interpreter = new Interpreter(
@@ -90,7 +91,7 @@ var InterpreterView = Backbone.View.extend({
             this.out.bind(this),
             this.awaitInput.bind(this),
             this.instruction.bind(this));
-        this.continue();
+        this.loop();
         this.showPreview();
     },
     out: function (cell) {
@@ -101,11 +102,11 @@ var InterpreterView = Backbone.View.extend({
         this.pause();
         this.inputTarget = cell;
     },
-    recieveInput: function () {
+    receiveInput: function () {
         this.inputTarget.put(this.input.val());
         this.input.parent().hide();
         this.input.val("");
-        this.continue();
+        this.loop();
     },
     removeCaret: function () {
         this.editor
@@ -127,7 +128,7 @@ var InterpreterView = Backbone.View.extend({
             .append(caret)
             .append(source.substr(index + 1));
     },
-    continue: function () {
+    loop: function () {
         this.interval = setInterval(function () {
             try {
                 this.interpreter.next();
@@ -159,7 +160,7 @@ var ButtonSwitchView = Backbone.View.extend({
         "click #run": "run",
         "click #stop": "stop",
         "click #pause": "pause",
-        "click #continue": "continue",
+        "click #continue": "loop",
         "keyup #source": "stop"
     },
     run: function () {
@@ -177,7 +178,7 @@ var ButtonSwitchView = Backbone.View.extend({
         this.$el.find("#continue").show();
         return false;
     },
-    continue: function () {
+    loop: function () {
         this.$el.find("#continue").hide();
         this.$el.find("#pause").show();
         return false;

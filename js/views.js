@@ -139,7 +139,8 @@ var InterpreterView = Backbone.View.extend({
                 this.interpreter.next();
             } catch (e) {
                 clearInterval(this.interval);
-                this.stop();
+                this.buttons.stop();
+                this.showEditor();
             }
         }.bind(this), this.delay);
     },

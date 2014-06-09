@@ -56,6 +56,8 @@ var InterpreterView = Backbone.View.extend({
     },
     events: {
         "click #run": "run",
+        "click #first-step": "firstStep",
+        "click #step": "step",
         "click #pause": "pause",
         "click #continue": "loop",
         "click #stop": "stop",
@@ -84,7 +86,7 @@ var InterpreterView = Backbone.View.extend({
         this.preview.hide();
         this.editor.show();
     },
-    run: function () {
+    begin: function () {
         this.reset();
         this.preview.empty();
         this.output.empty();
@@ -96,8 +98,15 @@ var InterpreterView = Backbone.View.extend({
             this.out.bind(this),
             this.awaitInput.bind(this),
             this.instruction.bind(this));
-        this.loop();
         this.showPreview();
+    },
+    run: function () {
+        this.begin();
+        this.loop();
+    },
+    firstStep: function () {
+        this.begin();
+        this.step();
     },
     out: function (cell) {
         this.output.append(cell.char());
@@ -135,14 +144,17 @@ var InterpreterView = Backbone.View.extend({
     },
     loop: function () {
         this.interval = setInterval(function () {
-            try {
-                this.interpreter.next();
-            } catch (e) {
-                clearInterval(this.interval);
-                this.buttons.stop();
-                this.showEditor();
-            }
+            this.step();
         }.bind(this), this.delay);
+    },
+    step: function () {
+        try {
+            this.interpreter.next();
+        } catch (e) {
+            clearInterval(this.interval);
+            this.buttons.stop();
+            this.showEditor();
+        }
     },
     pause: function () {
         clearInterval(this.interval);
@@ -170,28 +182,34 @@ var InterpreterView = Backbone.View.extend({
 var ButtonSwitchView = Backbone.View.extend({
     events: {
         "click #run": "run",
+        "click #first-step": "firstStep",
         "click #stop": "stop",
         "click #pause": "pause",
         "click #continue": "loop",
         "keyup #source": "stop"
     },
     run: function () {
-        this.$el.find("#run").hide();
+        this.$el.find("#run, #first-step").hide();
         this.$el.find("#stop, #pause").show();
         return false;
     },
+    firstStep: function () {
+        this.$el.find("#run, #first-step").hide();
+        this.$el.find("#stop, #step, #continue").show();
+        return false;
+    },
     stop: function () {
-        this.$el.find("#stop, #pause, #continue").hide();
-        this.$el.find("#run").show();
+        this.$el.find("#stop, #step, #pause, #continue").hide();
+        this.$el.find("#run, #first-step").show();
         return false;
     },
     pause: function () {
         this.$el.find("#pause").hide();
-        this.$el.find("#continue").show();
+        this.$el.find("#step, #continue").show();
         return false;
     },
     loop: function () {
-        this.$el.find("#continue").hide();
+        this.$el.find("#step, #continue").hide();
         this.$el.find("#pause").show();
         return false;
     }

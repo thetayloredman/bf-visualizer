@@ -151,13 +151,14 @@ var InterpreterView = Backbone.View.extend({
         try {
             this.interpreter.next();
         } catch (e) {
-            clearInterval(this.interval);
+            this.pause();
             this.buttons.stop();
             this.showEditor();
         }
     },
     pause: function () {
         clearInterval(this.interval);
+        this.interval = null;
     },
     reset: function () {
         this.pointer.set("index", 0);
@@ -172,9 +173,13 @@ var InterpreterView = Backbone.View.extend({
         this.showEditor();
     },
     changeDelay: function () {
-        this.pause();
-        this.delay = $("#delay").val();
-        this.loop();
+        if (this.interval) {
+            this.pause();
+            this.delay = $("#delay").val();
+            this.loop();
+        } else {
+            this.delay = $("#delay").val();
+        }
     }
 });
 

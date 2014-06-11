@@ -18,16 +18,22 @@ var Interpreter = function (source, tape, pointer,
     var tokens = "<>+-.,[]";
     var jumps = [], action = 0;
 
+    var error = function (message) {
+        return {
+            "name": "Error",
+            "message": message
+        };
+    };
+
     this.next = function () {
         if (action >= source.length) {
-            if (!jumps.length) throw {
+            if (jumps.length === 0) throw {
                 "name": "End",
                 "message": "End of brainfuck script."
             };
-            else throw {
-                "name": "Error",
-                "message": "Mismatched parentheses."
-            };
+            else {
+                throw error("Mismatched parentheses.");
+            }
         }
         // Skip non-code characters
         if (tokens.indexOf(source[action]) === -1) {
@@ -35,10 +41,9 @@ var Interpreter = function (source, tape, pointer,
             return this.next();
         }
         var index = pointer.get("index");
-        if (index < 0 || index >= tape.models.length) throw {
-            "name": "Error",
-            "message": "Memory error: " + index
-        };
+        if (index < 0 || index >= tape.models.length) {
+            throw error("Memory error: " + index);
+        }
         instruction(action);
         var token = source[action];
         var cell = tape.models[index];
@@ -74,10 +79,9 @@ var Interpreter = function (source, tape, pointer,
                 var loops = 1;
                 while (loops > 0) {
                     action++;
-                    if (action >= source.length) throw {
-                        "name": "Error",
-                        "message": "Mismatched parentheses."
-                    };
+                    if (action >= source.length) {
+                        throw error("Mismatched parentheses.");
+                    }
                     
                     if (source[action] === "]") {
                         loops--;
@@ -89,10 +93,9 @@ var Interpreter = function (source, tape, pointer,
             break;
 
         case "]":
-            if (!jumps.length) throw {
-                "name": "Error",
-                "message": "Mismatched parentheses."
-            };
+            if (jumps.length === 0) {
+                throw error("Mismatched parentheses.");
+            }
 
             if (cell.get("value") != 0) {
                 action = jumps[jumps.length - 1];

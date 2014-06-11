@@ -164,6 +164,11 @@ section.machine {
         color: #5d5d5d;
     }
 
+    #interpreter #output.error {
+        color: #d8000c;
+        background-color: #ffcbcb;
+    }
+
     a {
         color: #575757;
     }

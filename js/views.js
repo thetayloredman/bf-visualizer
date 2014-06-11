@@ -90,6 +90,7 @@ var InterpreterView = Backbone.View.extend({
         this.reset();
         this.preview.empty();
         this.output.empty();
+        this.output.removeClass("error");
         this.input.val("");
         this.interpreter = new Interpreter(
             this.editor.val(),
@@ -154,6 +155,10 @@ var InterpreterView = Backbone.View.extend({
             this.pause();
             this.buttons.stop();
             this.showEditor();
+            if (e.name == "Error") {
+                this.output.text(e.message);
+                this.output.addClass("error");
+            }
         }
     },
     pause: function () {

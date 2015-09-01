@@ -12,8 +12,7 @@ var Cell = Backbone.Model.extend({
     dec: function (c) {
         var val = this.get("value") - c;
         if (val < 0) {
-          
-          val += 256*(Math.ceil(-val/256))
+          val += 256*(Math.ceil(-val/256));
         }
         this.set("value", val);
     },

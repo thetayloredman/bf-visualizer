@@ -85,7 +85,7 @@ var Interpreter = function (source, tape, pointer,
             break;
 
         case ",":
-	          awaitInput(cell);
+            awaitInput(cell);
             break;
 
         case ".":

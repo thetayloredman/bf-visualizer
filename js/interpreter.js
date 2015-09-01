@@ -25,7 +25,7 @@ var Interpreter = function (source, tape, pointer,
         };
     };
 
-    this.next = function () {
+    this.next = function (optimize) {
         if (action >= source.length) {
             if (jumps.length === 0) throw {
                 "name": "End",
@@ -50,7 +50,7 @@ var Interpreter = function (source, tape, pointer,
         switch (token) {
         case "<":
             lookahead = 1;
-            while(source[action+lookahead]==="<"){
+            while(optimize&&source[action+lookahead]==="<"){
               lookahead++;
             }
             action += lookahead - 1;
@@ -59,7 +59,7 @@ var Interpreter = function (source, tape, pointer,
 
         case ">":
             lookahead = 1;
-            while(source[action+lookahead]===">"){
+            while(optimize&&source[action+lookahead]===">"){
               lookahead++;
             }
             action += lookahead - 1;
@@ -68,7 +68,7 @@ var Interpreter = function (source, tape, pointer,
 
         case "-":
             lookahead = 1;
-            while(source[action+lookahead]==="-"){
+            while(optimize&&source[action+lookahead]==="-"){
               lookahead++;
             }
             action += lookahead - 1;
@@ -77,7 +77,7 @@ var Interpreter = function (source, tape, pointer,
 
         case "+":
             lookahead = 1;
-            while(source[action+lookahead]==="+"){
+            while(optimize&&source[action+lookahead]==="+"){
               lookahead++;
             }
             action += lookahead - 1;
@@ -93,7 +93,7 @@ var Interpreter = function (source, tape, pointer,
             break;
 
         case "[":
-            if(source[action+1]==="-"&&source[action+2]==="]"){
+            if(optimize&&source[action+1]==="-"&&source[action+2]==="]"){
               cell.set("value",0);
             }
             if (cell.get("value") != 0) {

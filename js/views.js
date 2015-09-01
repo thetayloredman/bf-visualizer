@@ -150,7 +150,7 @@ var InterpreterView = Backbone.View.extend({
     },
     step: function () {
         try {
-            this.interpreter.next(this.delay === "30");
+            this.interpreter.next($("#optimize").is(':checked'));
         } catch (e) {
             this.pause();
             this.buttons.stop();

@@ -38,7 +38,7 @@ var Interpreter = function (source, tape, pointer,
         // Skip non-code characters
         if (tokens.indexOf(source[action]) === -1) {
             action++;
-            return this.next();
+            return this.next(optimize);
         }
         var index = pointer.get("index");
         if (index < 0 || index >= tape.models.length) {

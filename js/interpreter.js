@@ -6,7 +6,7 @@ var Interpreter = function (source, tape, pointer,
      * @tape: Tape model
      * @pointer: Pointer model
      * @out: Output callback
-     * @awaitInput: Input callback 
+     * @awaitInput: Input callback
      *
      * Usage:
      *
@@ -25,7 +25,7 @@ var Interpreter = function (source, tape, pointer,
         };
     };
 
-    this.next = function () {
+    this.next = function (optimize) {
         if (action >= source.length) {
             if (jumps.length === 0) throw {
                 "name": "End",
@@ -38,7 +38,7 @@ var Interpreter = function (source, tape, pointer,
         // Skip non-code characters
         if (tokens.indexOf(source[action]) === -1) {
             action++;
-            return this.next();
+            return this.next(optimize);
         }
         var index = pointer.get("index");
         if (index < 0 || index >= tape.models.length) {
@@ -49,23 +49,43 @@ var Interpreter = function (source, tape, pointer,
         var cell = tape.models[index];
         switch (token) {
         case "<":
-            pointer.left();
+            lookahead = 1;
+            while(optimize&&source[action+lookahead]==="<"){
+              lookahead++;
+            }
+            action += lookahead - 1;
+            pointer.left(lookahead);
             break;
 
         case ">":
-            pointer.right();
+            lookahead = 1;
+            while(optimize&&source[action+lookahead]===">"){
+              lookahead++;
+            }
+            action += lookahead - 1;
+            pointer.right(lookahead);
             break;
 
         case "-":
-            cell.dec();
+            lookahead = 1;
+            while(optimize&&source[action+lookahead]==="-"){
+              lookahead++;
+            }
+            action += lookahead - 1;
+            cell.dec(lookahead);
             break;
 
         case "+":
-            cell.inc();
+            lookahead = 1;
+            while(optimize&&source[action+lookahead]==="+"){
+              lookahead++;
+            }
+            action += lookahead - 1;
+            cell.inc(lookahead);
             break;
 
         case ",":
-	    awaitInput(cell);
+            awaitInput(cell);
             break;
 
         case ".":
@@ -73,6 +93,9 @@ var Interpreter = function (source, tape, pointer,
             break;
 
         case "[":
+            if(optimize&&source[action+1]==="-"&&source[action+2]==="]"){
+              cell.set("value",0);
+            }
             if (cell.get("value") != 0) {
                 jumps.push(action);
             } else {

@@ -6,19 +6,15 @@ var Cell = Backbone.Model.extend({
     defaults: {
         value: 0
     },
-    inc: function () {
-        if (this.get("value") == 255) {
-            this.set("value", 0);
-        } else {
-            this.increase("value", 1);
-        }
+    inc: function (c) {
+        this.set("value", (this.get("value") + c)%256);
     },
-    dec: function () {
-        if (this.get("value") == 0) {
-            this.set("value", 255);
-        } else {
-            this.increase("value", -1);
+    dec: function (c) {
+        var val = this.get("value") - c;
+        if (val < 0) {
+          val += 256*(Math.ceil(-val/256));
         }
+        this.set("value", val);
     },
     put: function (c) {
         this.set("value", c.charCodeAt(0));
@@ -36,10 +32,10 @@ var Pointer = Backbone.Model.extend({
     defaults: {
         index: 0
     },
-    left: function () {
-        this.increase("index", -1);
+    left: function (c) {
+        this.increase("index", -c);
     },
-    right: function () {
-        this.increase("index", +1);
+    right: function (c) {
+        this.increase("index",  c);
     }
 });

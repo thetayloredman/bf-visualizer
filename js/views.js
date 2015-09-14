@@ -47,7 +47,7 @@ var TapeView = Backbone.View.extend({
 
 
 var InterpreterView = Backbone.View.extend({
-    delay: 30,
+    delay: "90",
     el: "#interpreter",
     initialize: function (options) {
         this.pointer = options.pointer;
@@ -150,7 +150,7 @@ var InterpreterView = Backbone.View.extend({
     },
     step: function () {
         try {
-            this.interpreter.next();
+            this.interpreter.next($("#optimize").is(':checked'));
         } catch (e) {
             this.pause();
             this.buttons.stop();

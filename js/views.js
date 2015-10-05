@@ -158,6 +158,8 @@ var InterpreterView = Backbone.View.extend({
             if (e.name == "Error") {
                 this.output.text(e.message);
                 this.output.addClass("error");
+            } else if (e.name != "End") {
+                console.error(e);
             }
         }
     },

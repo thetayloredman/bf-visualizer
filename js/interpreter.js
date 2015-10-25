@@ -120,11 +120,13 @@ var Interpreter = function (source, tape, pointer,
           break;
 
         case ",":
-	  if (inputBuffer.hasInput()) {
-	    //set cell to input
-            cell.set("value",inputBuffer.getNext());
+	  if ($('#exclaim').is(':checked')) {
+	    if (inputBuffer.hasInput()) {
+              cell.set("value",inputBuffer.getNext());
+	    } else {
+              cell.set("value",0);
+	    }
 	  } else {
-            //grab input
 	    awaitInput(cell);
 	  }
           break;

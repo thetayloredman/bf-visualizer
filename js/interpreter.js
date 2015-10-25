@@ -15,9 +15,9 @@ var Interpreter = function (source, tape, pointer,
    *    pointer.get("index") // 1
    *
    * */
-  var tokens = "<>+-.,[]";
+  var tokens = "<>+-.,[]!";
   var jumps = [], action = 0;
-  
+
   //for ! operator
   var inputBuffer = new function() {
     this.buffer = "";
@@ -31,12 +31,12 @@ var Interpreter = function (source, tape, pointer,
     this.init = function() {
       for(var i = 0, pipe = false; i < source.length; i++) {
         if (pipe) {
-            this.buffer += source[i];
-	}
+          this.buffer += source[i];
+        }
 
-	if (source[i] == '!') {
-	  pipe = true;
-	}	
+        if (source[i] == '!') {
+          pipe = true;
+        }	
       }
       this.initialized = true;      
     };
@@ -46,11 +46,11 @@ var Interpreter = function (source, tape, pointer,
       return c;
     };
   }
-  
+
   function getIbHasInput() {
     alert("yes!");
   }
-  
+
 
   var error = function (message) {
     return {
@@ -82,94 +82,97 @@ var Interpreter = function (source, tape, pointer,
     instruction(action);
     var token = source[action];
     var cell = tape.models[index];
-      switch (token) {
-        case "<":
-          lookahead = 1;
-          while(optimize&&source[action+lookahead]==="<"){
-            lookahead++;
-          }
-          action += lookahead - 1;
-          pointer.left(lookahead);
-          break;
+    switch (token) {
+      case "<":
+        lookahead = 1;
+        while(optimize&&source[action+lookahead]==="<"){
+          lookahead++;
+        }
+        action += lookahead - 1;
+        pointer.left(lookahead);
+        break;
 
-        case ">":
-          lookahead = 1;
-          while(optimize&&source[action+lookahead]===">"){
-            lookahead++;
-          }
-          action += lookahead - 1;
-          pointer.right(lookahead);
-          break;
+      case ">":
+        lookahead = 1;
+        while(optimize&&source[action+lookahead]===">"){
+          lookahead++;
+        }
+        action += lookahead - 1;
+        pointer.right(lookahead);
+        break;
 
-        case "-":
-          lookahead = 1;
-          while(optimize&&source[action+lookahead]==="-"){
-            lookahead++;
-          }
-          action += lookahead - 1;
-          cell.dec(lookahead);
-          break;
+      case "-":
+        lookahead = 1;
+        while(optimize&&source[action+lookahead]==="-"){
+          lookahead++;
+        }
+        action += lookahead - 1;
+        cell.dec(lookahead);
+        break;
 
-        case "+":
-          lookahead = 1;
-          while(optimize&&source[action+lookahead]==="+"){
-            lookahead++;
-          }
-          action += lookahead - 1;
-          cell.inc(lookahead);
-          break;
+      case "+":
+        lookahead = 1;
+        while(optimize&&source[action+lookahead]==="+"){
+          lookahead++;
+        }
+        action += lookahead - 1;
+        cell.inc(lookahead);
+        break;
 
-        case ",":
-	  if ($('#exclaim').is(':checked')) {
-	    if (inputBuffer.hasInput()) {
-              cell.set("value",inputBuffer.getNext());
-	    } else {
-              cell.set("value",0);
-	    }
-	  } else {
-	    awaitInput(cell);
-	  }
-          break;
-
-        case ".":
-          out(cell);
-          break;
-
-        case "[":
-          if(optimize&&source[action+1]==="-"&&source[action+2]==="]"){
+      case ",":
+        if ($('#exclaim').is(':checked')) {
+          if (inputBuffer.hasInput()) {
+            cell.set("value",inputBuffer.getNext());
+          } else {
             cell.set("value",0);
           }
-          if (cell.get("value") != 0) {
-            jumps.push(action);
-          } else {
-            var loops = 1;
-            while (loops > 0) {
-              action++;
-              if (action >= source.length) {
-                throw error("Mismatched parentheses.");
-              }
+        } else {
+          awaitInput(cell);
+        }
+        break;
 
-              if (source[action] === "]") {
-                loops--;
-              } else if (source[action] === "[") {
-                loops++;
-              }
+      case ".":
+        out(cell);
+        break;
+
+      case "[":
+        if(optimize&&source[action+1]==="-"&&source[action+2]==="]"){
+          cell.set("value",0);
+        }
+        if (cell.get("value") != 0) {
+          jumps.push(action);
+        } else {
+          var loops = 1;
+          while (loops > 0) {
+            action++;
+            if (action >= source.length) {
+              throw error("Mismatched parentheses.");
+            }
+
+            if (source[action] === "]") {
+              loops--;
+            } else if (source[action] === "[") {
+              loops++;
             }
           }
-          break;
+        }
+        break;
 
-        case "]":
-          if (jumps.length === 0) {
-            throw error("Mismatched parentheses.");
-          }
+      case "]":
+        if (jumps.length === 0) {
+          throw error("Mismatched parentheses.");
+        }
 
-          if (cell.get("value") != 0) {
-            action = jumps[jumps.length - 1];
-          } else {
-            jumps.pop();
-          }
-          break; 
-      }
+        if (cell.get("value") != 0) {
+          action = jumps[jumps.length - 1];
+        } else {
+          jumps.pop();
+        }
+        break; 
+      case "!":
+        tokens = "";
+        break;
+    }
     return action++;
   }
 };

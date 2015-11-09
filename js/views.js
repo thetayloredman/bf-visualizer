@@ -114,6 +114,7 @@ var InterpreterView = Backbone.View.extend({
     },
     awaitInput: function (cell) {
         this.input.parent().show();
+        this.input.focus();
         this.pause();
         this.inputTarget = cell;
     },

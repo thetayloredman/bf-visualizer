@@ -79,7 +79,7 @@ var InterpreterView = Backbone.View.extend({
       }).render();
       this.preview.hide();
       this.setSourceFromURL();
-      this.buttons.run();
+      // this.buttons.run();
     },
     setShareURL: function () {
       location.hash = "#" + btoa(this.editor.val())
@@ -88,7 +88,7 @@ var InterpreterView = Backbone.View.extend({
       if (location.hash) {
         var bfCode = atob(location.hash.replace(/^#/, ""))
         this.editor.val(decodeURIComponent(bfCode));
-        _.defer(this.run.bind(this));
+        //_.defer(this.run.bind(this));
       }
     },
     showPreview: function () {

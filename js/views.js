@@ -66,7 +66,7 @@ var InterpreterView = Backbone.View.extend({
         "input #source": "setShareURL",
     },
     render: function () {
-	    this.input  = this.$el.find("#input");
+      this.input  = this.$el.find("#input");
       this.output = this.$el.find("#output");
       this.preview = this.$el.find("#preview");
       this.buttons = new ButtonSwitchView({
@@ -79,6 +79,7 @@ var InterpreterView = Backbone.View.extend({
       }).render();
       this.preview.hide();
       this.setSourceFromURL();
+      this.buttons.run();
     },
     setShareURL: function () {
       location.hash = "#" + btoa(this.editor.val())

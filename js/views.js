@@ -62,21 +62,33 @@ var InterpreterView = Backbone.View.extend({
         "click #continue": "loop",
         "click #stop": "stop",
         "change #input": "receiveInput",
-        "change #delay": "changeDelay"
+        "change #delay": "changeDelay",
+        "input #source": "setShareURL",
     },
     render: function () {
 	    this.input  = this.$el.find("#input");
-        this.output = this.$el.find("#output");
-        this.preview = this.$el.find("#preview");
-        this.buttons = new ButtonSwitchView({
-            el: this.el
-        }).render();
-        new TapeView({
-            model: this.tape,
-            pointer: this.pointer,
-            interpreter: this
-        }).render();
-        this.preview.hide();
+      this.output = this.$el.find("#output");
+      this.preview = this.$el.find("#preview");
+      this.buttons = new ButtonSwitchView({
+          el: this.el
+      }).render();
+      new TapeView({
+          model: this.tape,
+          pointer: this.pointer,
+          interpreter: this
+      }).render();
+      this.preview.hide();
+      this.setSourceFromURL();
+    },
+    setShareURL: function () {
+      location.hash = "#" + btoa(this.editor.val())
+    },
+    setSourceFromURL: function () {
+      if (location.hash) {
+        var bfCode = atob(location.hash.replace(/^#/, ""))
+        this.editor.val(decodeURIComponent(bfCode));
+        _.defer(this.run.bind(this));
+      }
     },
     showPreview: function () {
         this.preview.show();

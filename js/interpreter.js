@@ -69,8 +69,8 @@ var Interpreter = function (source, tape, pointer,
 
 			if (d < 0) break;
 		}
-		if (d > 0) throw error("SyntaxError: Missing paranthesis \"]\"");
-		else if (d < 0) throw error("SyntaxError: Wrong paranthesis \"]\"");
+		if (d > 0) throw error("SyntaxError: Missing parenthesis \"]\"");
+		else if (d < 0) throw error("SyntaxError: Wrong parenthesis \"]\"");
 	};
 
 	this.next = function (optimize) {

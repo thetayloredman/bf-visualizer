@@ -192,6 +192,7 @@ section.machine {
         min-height: 1.2em;
         padding: 10px;
         color: #5d5d5d;
+        overflow: auto;
     }
 
     #interpreter #output.error {

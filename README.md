@@ -1,17 +1,14 @@
-### Brainfuck Visualizer
+### BF Visualizer
 
-Javascript Brainfuck Interpreter + Visualizer
+Javascript BF Interpreter + Visualizer
 
-### What is BrainFuck?
+### What is BF?
 
-Brainfuck is a turing-complete minimal programming language. It designed to
+BF is a turing-complete minimal programming language. It designed to
  implement easily on any programming language.
 
-Brainfuck language consist with a simple machine model, a pointer and 8
+BF language consist with a simple machine model, a pointer and 8
 command (character).
-
-More information:
-<http://en.wikipedia.org/wiki/Brainfuck>
 
 ### Contributors
 
@@ -23,4 +20,4 @@ More information:
 - Eugene Sharygin ([eush77](https://github.com/eush77))
 
 ### Demo
-<https://fatiherikli.github.io/brainfuck-visualizer>
+<https://thetayloredman.github.io/bf-visualizer>
